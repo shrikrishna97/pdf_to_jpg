@@ -74,7 +74,7 @@ def main():
             # Add a button to trigger the download
             download_button_str = f"Download Image {i+1}"
             if st.button(download_button_str):
-                st.button(
+                st.download_button(
                     label="Click here to download",
                     data=img_bytes,
                     file_name=f"{os.path.basename(jpg_filename)}",
