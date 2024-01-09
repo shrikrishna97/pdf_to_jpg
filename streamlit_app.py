@@ -3,7 +3,6 @@ import fitz  # PyMuPDF
 from PIL import Image
 import io
 import os
-import uuid
 
 def pdf_to_images(pdf_path):
     images = []
@@ -29,8 +28,8 @@ def save_uploaded_file(uploaded_file):
     return pdf_filename
 
 def save_jpg_file(img, pdf_filename):
-    # Generate a unique name for the JPG file
-    jpg_filename = os.path.join("downloads", f"{str(uuid.uuid4())[:8]}.jpg")
+    # Save the JPG file with the fixed name "give.jpg"
+    jpg_filename = os.path.join("uploads", "give.jpg")
 
     # Save the JPG file
     img.save(jpg_filename, format='JPEG')
@@ -69,7 +68,7 @@ def main():
             # Display the image
             st.image(img_bytes, caption=f"Page {i+1}", use_column_width=True)
 
-            # Save the corresponding JPG file
+            # Save the corresponding JPG file as "give.jpg"
             jpg_filename = save_jpg_file(img, pdf_filename)
 
             # Add a download button for each image
