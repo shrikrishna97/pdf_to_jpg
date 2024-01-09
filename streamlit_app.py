@@ -74,11 +74,11 @@ def main():
             # Add a button to trigger the download
             download_button_str = f"Download Image {i+1}"
             if st.button(download_button_str):
-                st.download_button(
+                st.button(
                     label="Click here to download",
                     data=img_bytes,
                     file_name=f"{os.path.basename(jpg_filename)}",
-                    key=f"download_button_{i}"
+                    key=f"button_{i}"
                 )
 
 if __name__ == "__main__":
