@@ -71,14 +71,15 @@ def main():
             # Save the corresponding JPG file as "give.jpg"
             jpg_filename = save_jpg_file(img, pdf_filename)
 
-            # Add a download button for each image
+            # Add a button to trigger the download
             download_button_str = f"Download Image {i+1}"
-            st.download_button(
-                label=download_button_str,
-                data=img_bytes,
-                file_name=f"{os.path.basename(jpg_filename)}",
-                key=f"download_button_{i}"
-            )
+            if st.button(download_button_str):
+                st.download_button(
+                    label="Click here to download",
+                    data=img_bytes,
+                    file_name=f"{os.path.basename(jpg_filename)}",
+                    key=f"download_button_{i}"
+                )
 
 if __name__ == "__main__":
     main()
