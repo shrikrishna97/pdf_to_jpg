@@ -5,8 +5,8 @@ import io
 import os
 import uuid
 
-def pdf_to_images(pdf_path):
-    images = convert_from_path(pdf_path)
+def pdf_to_images(pdf_path, poppler_path=None):
+    images = convert_from_path(pdf_path, poppler_path=poppler_path)
     return images
 
 def save_uploaded_file(uploaded_file):
@@ -42,8 +42,12 @@ def main():
         # Save the uploaded file with its original name
         pdf_filename = save_uploaded_file(uploaded_file)
 
-        # Convert PDF to images
-        images = pdf_to_images(pdf_filename)
+        # Convert PDF to images (specify poppler_path)
+        try:
+            images = pdf_to_images(pdf_filename, poppler_path="/usr/bin")
+        except Exception as e:
+            st.error(f"Error: {e}")
+            return
 
         st.subheader("Converted Images")
 
@@ -71,4 +75,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
