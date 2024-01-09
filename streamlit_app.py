@@ -9,6 +9,10 @@ def pdf_to_images(pdf_path):
     return images
 
 def save_uploaded_file(uploaded_file):
+    # Create the "uploads" directory if it doesn't exist
+    if not os.path.exists("uploads"):
+        os.makedirs("uploads")
+    
     # Save the uploaded file to a temporary location
     with open(os.path.join("uploads", uploaded_file.name), "wb") as f:
         f.write(uploaded_file.getbuffer())
@@ -54,4 +58,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
