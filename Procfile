@@ -1,1 +1,1 @@
-web: streamlit run pdf_to_jpg.py
+web: streamlit run streamlit_app.py
