@@ -1,4 +1,3 @@
-# pdf_to_image_converter.py
 import streamlit as st
 from pdf2image import convert_from_path
 from PIL import Image
