@@ -3,17 +3,30 @@ from pdf2image import convert_from_path
 from PIL import Image
 import io
 import os
-import tempfile
+import uuid
 
 def pdf_to_images(pdf_path):
     images = convert_from_path(pdf_path)
     return images
 
 def save_uploaded_file(uploaded_file):
-    # Save the uploaded file to a temporary location
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
-        temp_pdf.write(uploaded_file.read())
-    return temp_pdf.name
+    # Create the "uploads" directory if it doesn't exist
+    if not os.path.exists("uploads"):
+        os.makedirs("uploads")
+
+    # Save the uploaded file with its original name
+    pdf_filename = os.path.join("uploads", uploaded_file.name)
+    with open(pdf_filename, "wb") as f:
+        f.write(uploaded_file.getbuffer())
+    return pdf_filename
+
+def save_jpg_file(img, pdf_filename):
+    # Generate a unique name for the JPG file
+    jpg_filename = os.path.join("downloads", f"{str(uuid.uuid4())[:8]}.jpg")
+
+    # Save the JPG file
+    img.save(jpg_filename, format='JPEG')
+    return jpg_filename
 
 def main():
     st.title("PDF to Image Converter")
@@ -26,11 +39,11 @@ def main():
         # Display uploaded PDF file
         st.write(f"You selected: {uploaded_file.name}")
 
-        # Save the uploaded file with a specific name (take.pdf)
-        pdf_path = save_uploaded_file(uploaded_file)
+        # Save the uploaded file with its original name
+        pdf_filename = save_uploaded_file(uploaded_file)
 
         # Convert PDF to images
-        images = pdf_to_images(pdf_path)
+        images = pdf_to_images(pdf_filename)
 
         st.subheader("Converted Images")
 
@@ -44,18 +57,18 @@ def main():
             # Display the image
             st.image(img_bytes, caption=f"Page {i+1}", use_column_width=True)
 
-            # Save the JPEG file with a specific name (give.jpg)
-            jpeg_path = f"give_{i+1}.jpg"
-            img.save(jpeg_path)
+            # Save the corresponding JPG file
+            jpg_filename = save_jpg_file(img, pdf_filename)
 
             # Add a download button for each image
             download_button_str = f"Download Image {i+1}"
             st.download_button(
                 label=download_button_str,
                 data=img_bytes,
-                file_name=jpeg_path,
+                file_name=f"{os.path.basename(jpg_filename)}",
                 key=f"download_button_{i}"
             )
 
 if __name__ == "__main__":
     main()
+
