@@ -1,12 +1,20 @@
 import streamlit as st
-from pdf2image import convert_from_path
+import fitz  # PyMuPDF
 from PIL import Image
 import io
 import os
 import uuid
 
-def pdf_to_images(pdf_path, poppler_path=None):
-    images = convert_from_path(pdf_path, poppler_path=poppler_path)
+def pdf_to_images(pdf_path):
+    images = []
+    pdf_document = fitz.open(pdf_path)
+
+    for page_number in range(pdf_document.page_count):
+        page = pdf_document[page_number]
+        image = page.get_pixmap()
+        images.append(Image.frombytes("RGB", [image.width, image.height], image.samples))
+
+    pdf_document.close()
     return images
 
 def save_uploaded_file(uploaded_file):
@@ -42,9 +50,9 @@ def main():
         # Save the uploaded file with its original name
         pdf_filename = save_uploaded_file(uploaded_file)
 
-        # Convert PDF to images (specify poppler_path)
+        # Convert PDF to images (using PyMuPDF)
         try:
-            images = pdf_to_images(pdf_filename, poppler_path="/usr/bin")
+            images = pdf_to_images(pdf_filename)
         except Exception as e:
             st.error(f"Error: {e}")
             return
